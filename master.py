@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 
 st.title("Bem-vindo(a) ao Chat MoreTalk")
 
