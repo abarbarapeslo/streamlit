@@ -21,3 +21,7 @@ if mensagem: #Só executa se o usuário digitou algo
     with st.chat_message("bot"): #mensagem formatada para o usuário...
         st.write(resposta(agradecimentos, mensagem)) #A mensagem entregue ao usuário
 
+if "historico" not in st.session_state:
+    st.session_state.historico = []
+    
+# fazer um st.session_state.historico.append()
