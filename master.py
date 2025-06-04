@@ -1,11 +1,12 @@
 import streamlit as st
 import pandas as pd
+import openai
 
 st.title("Bem-vindo(a) ao Chat MoreTalk")
 
-with st.chat_message("user"):
-    st.write("Hello Human!")
+st.write("Say something..")
 
+openai.api_key = "MY_API"
 agradecimentos = ["obrigado", "valeu", "agradeço", "muito obrigada"]
 mensagem = st.chat_input()
 
@@ -17,11 +18,19 @@ def resposta(agradecimentos,mensagem):
 
     return ("Nenhuma palavra está contida na mensagem!")
 
-if mensagem: #Só executa se o usuário digitou algo
-    with st.chat_message("bot"): #mensagem formatada para o usuário...
-        st.write(resposta(agradecimentos, mensagem)) #A mensagem entregue ao usuário
-
 if "historico" not in st.session_state:
     st.session_state.historico = []
-    
-# fazer um st.session_state.historico.append()
+
+if mensagem:
+    resposta_usuario = resposta(agradecimentos, mensagem)
+    st.session_state.historico.append({
+        "mensagem": mensagem,
+        "resposta": resposta_usuario
+    })
+
+# EXIBIR O HISTÓRICO COMPLETO
+for item in st.session_state.historico:
+    with st.chat_message("user"):
+        st.write(item["mensagem"])
+    with st.chat_message("bot"):
+        st.write(item["resposta"])
