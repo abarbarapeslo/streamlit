@@ -2,7 +2,9 @@ import streamlit as st
 import pandas as pd
 import openai
 
-st.title("Bem-vindo(a) ao Chat MoreTalk")
+def tela_chat():
+    st.title("Bem-vindo(a) ao Chat XPTO!")
+tela_chat()
 
 st.write("Say something..")
 
