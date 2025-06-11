@@ -1,38 +1,39 @@
 import streamlit as st
-import pandas as pd
-import openai
+import os
+from openai import OpenAI  
 
 def tela_chat():
-    st.title("Bem-vindo(a) ao Chat XPTO!")
-tela_chat()
+    st.title("Chat com IA")
 
-st.write("Say something..")
+    # Criar o cliente OpenAI passando a chave da variável de ambiente
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-openai.api_key = "MY_API"
-agradecimentos = ["obrigado", "valeu", "agradeço", "muito obrigada"]
-mensagem = st.chat_input()
+    mensagem = st.chat_input("Digite sua mensagem:")
 
-def resposta(agradecimentos,mensagem):
-    mensagem = mensagem.lower()
-    for palavra in agradecimentos:
-        if palavra in mensagem:
-            return ("Um das palavras está contida na mensagem!")
+    if "historico" not in st.session_state:
+        st.session_state.historico = []
 
-    return ("Nenhuma palavra está contida na mensagem!")
+    if mensagem:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "Você é um assistente útil."},
+                *[
+                    {"role": "user", "content": item["mensagem"]}
+                    for item in st.session_state.historico
+                ],
+                {"role": "user", "content": mensagem},
+            ],
+        )
+        resposta_texto = response.choices[0].message.content
 
-if "historico" not in st.session_state:
-    st.session_state.historico = []
+        st.session_state.historico.append({
+            "mensagem": mensagem,
+            "resposta": resposta_texto
+        })
 
-if mensagem:
-    resposta_usuario = resposta(agradecimentos, mensagem)
-    st.session_state.historico.append({
-        "mensagem": mensagem,
-        "resposta": resposta_usuario
-    })
-
-# EXIBIR O HISTÓRICO COMPLETO
-for item in st.session_state.historico:
-    with st.chat_message("user"):
-        st.write(item["mensagem"])
-    with st.chat_message("bot"):
-        st.write(item["resposta"])
+    for item in st.session_state.historico:
+        with st.chat_message("user"):
+            st.write(item["mensagem"])
+        with st.chat_message("bot"):
+            st.write(item["resposta"])

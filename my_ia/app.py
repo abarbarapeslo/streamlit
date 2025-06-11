@@ -13,8 +13,8 @@ def mudar_pagina(pagina):
 
 # Menu simples para navegar entre páginas
 st.sidebar.title("Navegação")
-if st.sidebar.button("Login"):
-    mudar_pagina("login")
+if st.sidebar.button("Login", key="botao_login_sidebar"):
+    st.session_state.pagina = "login"
 if st.sidebar.button("Cadastro"):
     mudar_pagina("cadastro")
 if st.sidebar.button("Chat"):
