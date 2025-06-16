@@ -2,6 +2,10 @@ import streamlit as st
 from login import tela_login
 from cadastro import tela_cadastro
 from master import tela_chat  
+from master import tela_chat
+
+if __name__ == "__main__":
+    tela_chat()
 
 # Inicializa a página atual na session_state
 if "pagina" not in st.session_state:
